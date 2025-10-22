@@ -11,8 +11,8 @@
 #define STD_SIZE_Y 40
 #define TEMPO 0.2
 #define COOLDOWN 0.2
-#define SNAKE_COLOR YELLOW
-#define FOOD_COLOR BLUE
+#define SNAKE_COLOR GREEN
+#define FOOD_COLOR RED
 
 typedef struct Bordas{
     Rectangle pos;
@@ -27,7 +27,7 @@ typedef struct Body{
 // Criado struct de celula para corpo da cobra
 typedef struct Celula{
     Body body;
-    Body* prox;
+    struct Celula* prox; // att pra funcionar as funções
 }Celula;
 
 // renomeando um vetor de celula para snake
