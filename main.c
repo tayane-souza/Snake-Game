@@ -30,18 +30,24 @@ int main(){
             DesenhaJogo(&jogo);
             AtualizaRodada(&jogo);
             ColisaoFood(&jogo); 
+            if(Colisaocobra(&jogo) == 1){
+                gameOver = 0;
+            }
             if(ColisaoBorda(&jogo) == 1){
                 gameOver = 0;
             }
         } else {
             DrawText("Game Over", 195, 300, 40, WHITE);
             if (IsKeyPressed(KEY_ENTER)){
+                Desaloca(&jogo);
                 IniciaJogo(&jogo);
                 gameOver = 1;
             }
         }
         EndDrawing();
     }
+    Desaloca(&jogo);
     CloseWindow();
+    Desaloca(&jogo);
     return 0;
 }
