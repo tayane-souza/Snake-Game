@@ -44,6 +44,7 @@ typedef struct Jogo{
     Bordas bordas[4];
     double tempo;
     double cooldown;
+    char nickname[32]; // array para armazenar o nickname do jogador
 }Jogo;
 
 void IniciaBody(Jogo *j);
