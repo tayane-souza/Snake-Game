@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <string.h>
 #define LARGURA 660
 #define ALTURA 660
 #define STD_SIZE_X 40
@@ -45,14 +46,33 @@ int main(){
             DrawText(menuSelection == 0 ? "Novo Jogo" : "  Novo Jogo", 220, 200, 30, WHITE);
             DrawText(menuSelection == 1 ? "Ranking" : "  Ranking", 220, 260, 30, WHITE);
             DrawText(menuSelection == 2 ? "Sair" : "  Sair", 220, 320, 30, WHITE);
+            
 
             if (IsKeyPressed(KEY_ENTER)){
                 if (menuSelection == 0){
-                    // inicia o jogo e sai do menu
-                    Desaloca(&jogo);
-                    IniciaJogo(&jogo);
-                    gameOver = 1;
-                    Menu = 0;
+                    while(!WindowShouldClose()){
+                        BeginDrawing();
+                        ClearBackground(BLACK);
+                        DrawText("Nome do Jogador:", LARGURA/3.4, ALTURA/4, 30, WHITE);
+                        DrawText(jogo.jogador.nickname, LARGURA/3.4, ALTURA/2.5, 25, WHITE);
+                        int letra = GetCharPressed();
+                            if(letra){
+                            jogo.jogador.nickname[jogo.jogador.tam] = letra;
+                            jogo.jogador.tam++;
+                            
+                        } else if (IsKeyPressed(KEY_BACKSPACE) && jogo.jogador.tam >= 0){
+                            jogo.jogador.nickname[jogo.jogador.tam] = '\0';
+                            jogo.jogador.tam--;
+                        }                        
+                        EndDrawing();
+                        if(IsKeyPressed(KEY_ENTER)){
+                            break;
+                        } 
+                    }
+                        Desaloca(&jogo);
+                        IniciaJogo(&jogo);
+                        gameOver = 1;
+                        Menu = 0;
                 } else if (menuSelection == 1){
                     // Vai para tela de ranking até o usuário apertar ENTER
                     while(!WindowShouldClose()){
