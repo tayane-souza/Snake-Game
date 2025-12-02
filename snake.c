@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <string.h>
 #define LARGURA 660
 #define ALTURA 660
 #define STD_SIZE_X 40
@@ -47,6 +48,7 @@ void IniciaJogo(Jogo *j){
     IniciaBordas(j);
     IniciaBody(j);
     IniciaFood(j);
+    IniciaJogador(j);
 
     j->tempo = GetTime();
 }
@@ -191,16 +193,16 @@ void AumentaBody(Jogo *j){
     NovoPos->body.direcao = atual->body.direcao; 
     int direcao_rabo = atual->body.direcao;
     if(direcao_rabo == 0){
-        NovoPos->body.pos.y += STD_SIZE_Y;
-    } 
-    else if(direcao_rabo == 1){
-        NovoPos->body.pos.x -= STD_SIZE_X;
-    } 
-    else if(direcao_rabo == 2){
         NovoPos->body.pos.y -= STD_SIZE_Y;
     } 
-    else if(direcao_rabo == 3){
+    else if(direcao_rabo == 1){
         NovoPos->body.pos.x += STD_SIZE_X;
+    } 
+    else if(direcao_rabo == 2){
+        NovoPos->body.pos.y += STD_SIZE_Y;
+    } 
+    else if(direcao_rabo == 3){
+        NovoPos->body.pos.x -= STD_SIZE_X;
     } 
     atual->prox = NovoPos;
 
@@ -225,5 +227,13 @@ void Desaloca(Jogo *j){
         prox = atual->prox;
         free(atual);
         atual = prox;
+    }
+}
+
+void IniciaJogador(Jogo *j){
+    j->jogador.pontos = 0;
+    j->jogador.tam = 0;
+    for(int i=0; i < 32; i++){
+        j->jogador.nickname[i] = '\0';
     }
 }
