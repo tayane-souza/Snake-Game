@@ -193,16 +193,16 @@ void AumentaBody(Jogo *j){
     NovoPos->body.direcao = atual->body.direcao; 
     int direcao_rabo = atual->body.direcao;
     if(direcao_rabo == 0){
-        NovoPos->body.pos.y -= STD_SIZE_Y;
-    } 
-    else if(direcao_rabo == 1){
-        NovoPos->body.pos.x += STD_SIZE_X;
-    } 
-    else if(direcao_rabo == 2){
         NovoPos->body.pos.y += STD_SIZE_Y;
     } 
-    else if(direcao_rabo == 3){
+    else if(direcao_rabo == 1){
         NovoPos->body.pos.x -= STD_SIZE_X;
+    } 
+    else if(direcao_rabo == 2){
+        NovoPos->body.pos.y -= STD_SIZE_Y;
+    } 
+    else if(direcao_rabo == 3){
+        NovoPos->body.pos.x += STD_SIZE_X;
     } 
     atual->prox = NovoPos;
 
