@@ -1,4 +1,5 @@
 #include "snake.h"
+#include "maps.h"
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -104,6 +105,9 @@ int main(){
                     gameOver = 0;
                 }
                 if(ColisaoBorda(&jogo) == 1){
+                    gameOver = 0;
+                }
+                if(ColisaoMapa(&jogo) == 1){//se bate em barreira, perde
                     gameOver = 0;
                 }
             } else {
