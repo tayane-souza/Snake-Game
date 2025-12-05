@@ -77,6 +77,7 @@ void Desaloca(Jogo *j);
 void QuickSortPlayers(Jogo *j, int left, int right);
 void IniciaJogador(Jogo *j);
 void SalvaRanking(Jogo *j, const char *raking);
+void IniciaFoodSemBarreira(Jogo *j);    // comida fora das barreiras
  
 
 
