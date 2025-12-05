@@ -16,6 +16,7 @@
 
 int main(){
     Jogo jogo;
+    jogo.num_players = 0; // inicializa contagem de players ao iniciar o programa
     int gameOver = 1;
     int Menu = 1; // 1 -> menu, 0 -> jogo rodando
     int menuSelection = 0; // 0: Start, 1: Instructions, 2: Exit
@@ -27,10 +28,13 @@ int main(){
 
     // Inicializa uma vez; quando o jogador começar, chama IniciaJogo novamente
     IniciaJogo(&jogo);
+    IniciaJogador(&jogo);
+    
 
     while (!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
+        
 
         if (Menu){
             // Navegação do menu
@@ -50,6 +54,8 @@ int main(){
 
             if (IsKeyPressed(KEY_ENTER)){
                 if (menuSelection == 0){
+                    Desaloca(&jogo);
+                    IniciaJogo(&jogo);
                     while(!WindowShouldClose()){
                         BeginDrawing();
                         ClearBackground(BLACK);
@@ -69,8 +75,8 @@ int main(){
                             break;
                         } 
                     }
-                        Desaloca(&jogo);
-                        IniciaJogo(&jogo);
+            
+        
                         gameOver = 1;
                         Menu = 0;
                 } else if (menuSelection == 1){
@@ -79,7 +85,6 @@ int main(){
                         BeginDrawing();
                         ClearBackground(BLACK);
                         DrawText("Ranking", 200, 60, 40, LIGHTGRAY);
-                        // PARTE PARA INSERIR RANKING AQUI
                         EndDrawing();
                         if (IsKeyPressed(KEY_ENTER) || WindowShouldClose()) break;
                     }
@@ -103,8 +108,11 @@ int main(){
                 }
             } else {
                 DrawText("Game Over", 195, 300, 40, WHITE);
-                DrawText("Press ENTER to return to menu", 120, 360, 20, WHITE);
+                DrawText(TextFormat("Pontos: %d", jogo.jogador.pontos), 230, 350, 20, WHITE);
+                DrawText("Press ENTER to return to menu", 120, 400, 20, WHITE);
                 if (IsKeyPressed(KEY_ENTER)){
+                    /* salva ranking (arquivo + vetor em memória) antes de resetar o jogo */
+                    SalvaRanking(&jogo, "ranking.txt");
                     Desaloca(&jogo);
                     IniciaJogo(&jogo);
                     gameOver = 1;
