@@ -1,4 +1,5 @@
 #include "snake.h"
+#include "maps.h"
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,10 +46,12 @@ void IniciaFood(Jogo *j){
     j->food.color = FOOD_COLOR;
 }
 
+
 void IniciaJogo(Jogo *j){
     IniciaBordas(j);
     IniciaBody(j);
-    IniciaFood(j);
+    IniciaMapaAleatorio(j); // escolhe e inicializa um mapa aleatório
+    IniciaFoodSeguro(j);    // pra n ficar comida em cima da barreira
     IniciaJogador(j);
 
     j->tempo = GetTime();
@@ -78,6 +81,7 @@ void DesenhaBordas(Jogo *j){
 
 void DesenhaJogo(Jogo *j){
     DesenhaBordas(j);
+    DesenhaMapa(j);
     DesenhaBody(j);
     DesenhaFood(j);
     DrawText(TextFormat("Pontuação: %d", j->jogador.pontos), 10, 10, 20, PINK);
@@ -162,7 +166,7 @@ int ColisaoFood(Jogo *j){
     if (CheckCollisionRecs(j->snake->body.pos, j->food.pos)){
         j->jogador.pontos += 1;
         AumentaBody(j);
-        IniciaFood(j);
+        IniciaFoodSeguro(j); // gera nova comida sem colisão com barreiras
         return 1;
     }
     return 0;
