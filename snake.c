@@ -135,6 +135,19 @@ void AtualizaPosBody(Jogo *j){
         j->snake->body.pos.x -= STD_SIZE_X;
     } 
 
+    // implementando para a cobra atravessar as bordas
+    if (j->snake->body.pos.x > LARGURA - 10 - STD_SIZE_X) {
+        j->snake->body.pos.x = 10;
+    } else if (j->snake->body.pos.x < 10) {
+        j->snake->body.pos.x = LARGURA - 10 - STD_SIZE_X;
+    }
+
+    if (j->snake->body.pos.y > ALTURA - 10 - STD_SIZE_Y) {
+        j->snake->body.pos.y = 10;
+    } else if (j->snake->body.pos.y < 10) {
+        j->snake->body.pos.y = ALTURA - 10 - STD_SIZE_Y;
+    }
+
     if(j->snake->prox != NULL){
         Celula* atual = j->snake->prox; // apontando pro corpo (prox nó dps da cabeça)
         while(atual != NULL){
@@ -166,6 +179,8 @@ void AtualizaRodada(Jogo *j){
 int ColisaoFood(Jogo *j){
     if (CheckCollisionRecs(j->snake->body.pos, j->food.pos)){
         j->jogador.pontos += 1;
+        // som para comer comida
+        PlaySound(j->eatSound);
         AumentaBody(j);
         IniciaFoodSeguro(j); // gera nova comida sem colisão com barreiras
         return 1;
@@ -173,14 +188,6 @@ int ColisaoFood(Jogo *j){
     return 0;
 }
 
-// função para colidir com a borda check
-// renomeado a variaveis para receber o corpo da cobra como lista j->snake->body
-int ColisaoBorda(Jogo *j){
-    if(CheckCollisionRecs(j->bordas[1].pos, j->snake->body.pos) || CheckCollisionRecs(j->bordas[2].pos, j->snake->body.pos) || CheckCollisionRecs(j->bordas[3].pos, j->snake->body.pos) || CheckCollisionRecs(j->bordas[0].pos, j->snake->body.pos) ){
-        return 1;
-    }
-    return 0;
-}
 
 // função para aumentar o tamanho da cobra ao contrario do que ela come a maçã
 void AumentaBody(Jogo *j){
@@ -221,7 +228,9 @@ void AumentaBody(Jogo *j){
         Celula* atual = j->snake->prox; // começa do corpo
         while(atual != NULL){
             if(CheckCollisionRecs(cabeca->body.pos, atual->body.pos)){
-                return 1;
+                    // som para colisão com a cobra
+                    PlaySound(j->colisaoSound);
+                    return 1;
             }
             atual = atual->prox;
         }
@@ -270,15 +279,19 @@ void QuickSortPlayers(Jogo *j, int left, int right){
 }
 
 void IniciaRank(Jogo *j){
-    FILE *pf=fopen("ranking.txt","r");
-    char linha[25];
-    for(int i=0; i<20;i++){
-        fgets(linha,25,pf);
-        strcpy(j->players[i].nickname, strtok(linha, " "));
-        j->players[i].pontos = atoi(strtok(NULL, " "));
-
+    FILE *pf = fopen("ranking.txt", "r");
+    if (pf != NULL){
+        char linha[128];
+        int y = 120;
+        while (fgets(linha, sizeof(linha), pf) != NULL && y < ALTURA - 20){
+            linha[strcspn(linha, "\r\n")] = '\0';
+            DrawText(linha, 160, y, 20, WHITE);
+            y += 25;
+        }
+        fclose(pf);
+    } else{
+        DrawText("Nenhum ranking encontrado.", 160, 120, 20, WHITE);
     }
-    fclose(pf);
 }
 
 void SalvaRanking(Jogo *j, const char *ranking){
