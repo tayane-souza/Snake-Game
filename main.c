@@ -27,10 +27,17 @@ int main(){
     SetTargetFPS(60);
     srand(time(NULL));
     InitAudioDevice(); 
-    SetMasterVolume(0.8f);
-    jogo.backgroundMusic = LoadMusicStream("Assets/BackgroundSound.wav"); 
+    SetMasterVolume(1.0f);
+    jogo.backgroundMusic = LoadMusicStream("Assets/BackgroundSound.mp3"); 
     PlayMusicStream(jogo.backgroundMusic);
+    // volume de fundo mais baixo
+    SetMusicVolume(jogo.backgroundMusic, 0.1f);
     jogo.apple = LoadTexture("Assets/apple.png");
+    jogo.eatSound = LoadSound("Assets/Eat_Apple.mp3");
+    // volume de de comer mais alto
+    SetSoundVolume(jogo.eatSound, 1.0f);
+    jogo.colisaoSound = LoadSound("Assets/Colisão_GameOver.mp3");
+    SetSoundVolume(jogo.colisaoSound, 1.0f); // volume de colisão alto
     
 
     // Inicializa uma vez; quando o jogador começar, chama IniciaJogo novamente
@@ -55,9 +62,23 @@ int main(){
 
             // Desenha o menu
             DrawText("SNAKE GAME", 200, 80, 40, GREEN);
-            DrawText(menuSelection == 0 ? "Novo Jogo" : "  Novo Jogo", 220, 200, 30, WHITE);
-            DrawText(menuSelection == 1 ? "Ranking" : "  Ranking", 220, 260, 30, WHITE);
-            DrawText(menuSelection == 2 ? "Sair" : "  Sair", 220, 320, 30, WHITE);
+            if (menuSelection == 0) {
+                DrawText("Novo Jogo", 220, 200, 30, WHITE);
+            } else {
+                DrawText("  Novo Jogo", 220, 200, 30, WHITE);
+            }
+            
+            if (menuSelection == 1) {
+                DrawText("Ranking", 220, 260, 30, WHITE);
+            } else {
+                DrawText("  Ranking", 220, 260, 30, WHITE);
+            }
+            
+            if (menuSelection == 2) {
+                DrawText("Sair", 220, 320, 30, WHITE);
+            } else {
+                DrawText("  Sair", 220, 320, 30, WHITE);
+            }
             
 
             if (IsKeyPressed(KEY_ENTER)){
@@ -65,6 +86,7 @@ int main(){
                     Desaloca(&jogo);
                     IniciaJogo(&jogo);
                     while(!WindowShouldClose()){
+                        UpdateMusicStream(jogo.backgroundMusic);
                         BeginDrawing();
                         ClearBackground(BLACK);
                         DrawText("Nome do Jogador:", LARGURA/3.4, ALTURA/4, 30, WHITE);
@@ -90,9 +112,13 @@ int main(){
                 } else if (menuSelection == 1){
                     // Vai para tela de ranking até o usuário apertar ENTER
                     while(!WindowShouldClose()){
+                        UpdateMusicStream(jogo.backgroundMusic);
                         BeginDrawing();
                         ClearBackground(BLACK);
-                        DrawText("Ranking", 200, 60, 40, LIGHTGRAY);
+                        DrawText("Ranking", 260, 20, 50, YELLOW);
+
+                        IniciaRank(&jogo); // desenha na aba rank no menu
+
                         EndDrawing();
                         if (IsKeyPressed(KEY_ENTER) || WindowShouldClose()) break;
                     }
@@ -111,16 +137,14 @@ int main(){
                 if(Colisaocobra(&jogo) == 1){
                     gameOver = 0;
                 }
-                if(ColisaoBorda(&jogo) == 1){
-                    gameOver = 0;
-                }
                 if(ColisaoMapa(&jogo) == 1){//se bate em barreira, perde
                     gameOver = 0;
                 }
             } else {
-                DrawText("Game Over", 195, 300, 40, WHITE);
-                DrawText(TextFormat("Pontos: %d", jogo.jogador.pontos), 230, 350, 20, WHITE);
-                DrawText("Press ENTER to return to menu", 120, 400, 20, WHITE);
+                DrawText("Game Over", 205, 200, 50, RED);
+                DrawText(TextFormat("%s", jogo.jogador.nickname), 120, 310, 20, WHITE);
+                DrawText(TextFormat("Pontos: %d", jogo.jogador.pontos), 120, 350, 20, WHITE);
+                DrawText("Pressione Enter para retornar ao menu", 120, 400, 20, WHITE);
                 if (IsKeyPressed(KEY_ENTER)){
                     /* salva ranking (arquivo + vetor em memória) antes de resetar o jogo */
                     SalvaRanking(&jogo, "ranking.txt");
@@ -136,10 +160,11 @@ int main(){
     }
     
     UnloadMusicStream(jogo.backgroundMusic);
+    UnloadSound(jogo.eatSound);
+    UnloadSound(jogo.colisaoSound);
     CloseAudioDevice();
     UnloadTexture(jogo.apple);
     Desaloca(&jogo);
     CloseWindow();
-    Desaloca(&jogo);
     return 0;
 }
