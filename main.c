@@ -26,6 +26,12 @@ int main(){
     InitWindow(LARGURA, ALTURA, "Snake Game");
     SetTargetFPS(60);
     srand(time(NULL));
+    InitAudioDevice(); 
+    SetMasterVolume(0.8f);
+    jogo.backgroundMusic = LoadMusicStream("Assets/BackgroundSound.wav"); 
+    PlayMusicStream(jogo.backgroundMusic);
+    jogo.apple = LoadTexture("Assets/apple.png");
+    
 
     // Inicializa uma vez; quando o jogador começar, chama IniciaJogo novamente
     IniciaJogo(&jogo);
@@ -33,6 +39,7 @@ int main(){
     
 
     while (!WindowShouldClose()){
+        UpdateMusicStream(jogo.backgroundMusic);
         BeginDrawing();
         ClearBackground(BLACK);
         
@@ -127,7 +134,10 @@ int main(){
 
         EndDrawing();
     }
-
+    
+    UnloadMusicStream(jogo.backgroundMusic);
+    CloseAudioDevice();
+    UnloadTexture(jogo.apple);
     Desaloca(&jogo);
     CloseWindow();
     Desaloca(&jogo);
