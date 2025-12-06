@@ -67,7 +67,7 @@ void IniciaMapaAleatorio(Jogo *j){
 void DesenhaMapa(Jogo *j){
     (void)j;
     for(int i=0;i<obst_count;i++){
-        DrawRectangleRec(obstaculos[i], DARKGRAY);
+        DrawRectangleRec(obstaculos[i], PURPLE);
     }
 }
 
@@ -75,7 +75,11 @@ int ColisaoMapa(Jogo *j){ // verifica se a cabeça da cobra nasce em um obstácu
     if(j==NULL || j->snake==NULL) return 0;
     Rectangle cabeca = j->snake->body.pos;
     for(int i=0;i<obst_count;i++){
-        if(CheckCollisionRecs(cabeca, obstaculos[i])) return 1;
+        if(CheckCollisionRecs(cabeca, obstaculos[i])){
+            // som para colisão com a cobra
+            PlaySound(j->colisaoSound);
+            return 1;
+        }
     }
     return 0;
 }
