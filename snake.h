@@ -57,6 +57,8 @@ typedef struct Jogo{
     Jogador players[MAX_PLAYERS]; // array pra armazena cada nick de jogador e sua pontuação
     Texture2D apple;
     Music backgroundMusic;
+    Sound eatSound;
+    Sound colisaoSound;
 }Jogo;
 
 
@@ -72,12 +74,12 @@ void AtualizaDirecao(Jogo *j);
 void AtualizaPosBody(Jogo *j);
 void AtualizaRodada(Jogo *j);
 int ColisaoFood(Jogo *j);
-int ColisaoBorda(Jogo *j);
 void AumentaBody(Jogo *j);
 int Colisaocobra(Jogo *j);
 void Desaloca(Jogo *j);
 void QuickSortPlayers(Jogo *j, int left, int right);
 void IniciaJogador(Jogo *j);
+void IniciaRank(Jogo *j);
 void SalvaRanking(Jogo *j, const char *raking);
 void IniciaFoodSemBarreira(Jogo *j);    // comida fora das barreiras
  
