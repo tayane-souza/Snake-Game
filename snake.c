@@ -64,12 +64,13 @@ void DesenhaBody(Jogo *j){
         DrawRectangleRec(atual->body.pos, atual->body.color);
         atual = atual->prox; // move pro prox no da lista
     }
-    
-
 }
 
 void DesenhaFood(Jogo *j){
-    DrawRectangleRec(j->food.pos, j->food.color);
+    Rectangle source = { 0, 0, (float)j->apple.width, (float)j->apple.height };
+    Rectangle dest = j->food.pos;
+    Vector2 origin = { 0, 0 };
+    DrawTexturePro(j->apple, source, dest, origin, 0.0f, WHITE);
 }
 
 void DesenhaBordas(Jogo *j){
