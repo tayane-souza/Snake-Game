@@ -55,6 +55,8 @@ typedef struct Jogo{
     Jogador jogador;
     int num_players;
     Jogador players[MAX_PLAYERS]; // array pra armazena cada nick de jogador e sua pontuação
+    Texture2D apple;
+    Music backgroundMusic;
 }Jogo;
 
 
